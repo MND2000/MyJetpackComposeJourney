@@ -62,6 +62,7 @@ fun ScreenNav() {
 
 }
 
+//Screen 1
 @Composable
 fun ScreenMain(navController: NavController) {
 
@@ -150,6 +151,7 @@ fun ScreenMain(navController: NavController) {
 }
 //Start Journey Button Leads to next page
 
+//Screen 2
 @Composable
 fun ScreenTwo(navController: NavController) {
     Column(
