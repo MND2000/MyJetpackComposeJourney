@@ -1,23 +1,19 @@
 package za.ac.cput.myjourney
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -31,6 +27,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import za.ac.cput.myjourney.ui.theme.MyJourneyTheme
 import za.ac.cput.myjourney.ui.theme.Routes
+import kotlin.system.exitProcess
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +56,7 @@ fun ScreenNav() {
     NavHost(navController = navController, startDestination = "welcome", builder = {
         composable("welcome", content= { ScreenMain(navController = navController)})
         composable("journey", content= { ScreenTwo(navController = navController)})
+        composable("modules", content= { ScreenThree(navController = navController)})
 
     } )
 
@@ -174,11 +172,12 @@ fun ScreenTwo(navController: NavController) {
             textAlign = TextAlign.Center
         )
 
-        //Dummy Button
+        //Current modules button to third screen
         val openDialog = remember { mutableStateOf(false) }
 
         Button(onClick = {
             openDialog.value = true
+            navController.navigate("modules")
         })
 
         {
@@ -213,6 +212,119 @@ fun ScreenTwo(navController: NavController) {
             }
 
         }
+
+//Screen 3
+@Composable
+fun ScreenThree(navController: NavController) {
+
+    Column(
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize()) {
+
+        Text(
+            text = "List of my Current Modules",
+            style = TextStyle(textDecoration = TextDecoration.Underline),
+            fontSize = 30.sp,
+            textAlign = TextAlign.Center
+        )
+    Row() {
+        Text(text = " Applications Development Practice 3 \nPractical Subject --- Year Round Module " +
+                "\n\n Applications Development Theory 3 \n Theory Subject --- Year Round Module " +
+                "\n\n ICT Electives 3 \n Practical Subject --- Semester One Module " +
+                "\n\n Information Systems 3 \n Practical and Theory Subject --- Year Round Module " +
+                "\n\n Project 3 \n Practical Subject --- Year Round Module " +
+                "\n\n Project Management 3 \n Theory Subject --- Semester One Module " +
+                "\n\n Professional Practice 3 \n Theory Subject --- Semester One Module " +
+                "\n\n Project Presentation 3 \n Practical Subject --- Year Round Module \n\n",
+            fontSize = 15.sp)
+    }
+//Goodbye Button
+        Row(verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(5.dp, 5.dp)) {
+            val openDialog = remember { mutableStateOf(false)  }
+            val activity = (LocalContext.current as? Activity)
+
+            Button(onClick = {
+                openDialog.value = true
+                PaddingValues(20.dp)
+            })
+
+            {
+                Text("Goodbye")
+
+                Icon (
+                    Icons.Filled.ExitToApp,
+                    contentDescription = "Goodbye Button",
+                    tint = MaterialTheme.colors.onPrimary,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+
+            if (openDialog.value) {
+
+                AlertDialog(
+                    onDismissRequest = {
+                        openDialog.value = false
+                    },
+                    title = {
+                        Text(text = "Are you sure you want to exit?")
+                    },
+                    text = {
+                        Text("Leaving Now?")
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                openDialog.value = false
+                            }) {
+                            Text("No")
+                        }
+                    },
+                    dismissButton ={
+                       Button(
+                           onClick = {
+                               openDialog.value = false
+                               activity?.finish()  //Exits Application
+
+                       }) {
+                           Text(text = "Yes")
+                       }
+
+                    }
+
+                    )
+            }
+        }
+
+        Row(verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.Center,
+            ) {
+
+            val openDialog = remember { mutableStateOf(false) }
+
+            Button(onClick = {
+                openDialog.value = true
+                navController.navigate("journey")
+            })
+
+            {
+                Text("Back")
+
+                Icon(
+                    Icons.Filled.ArrowBack,
+                    contentDescription = "Back Button",
+                    tint = MaterialTheme.colors.onPrimary,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+
+        }
+
+        }
+
+    }
 
 @Preview(showBackground = true)
 @Composable
